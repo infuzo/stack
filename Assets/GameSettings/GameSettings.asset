@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a6a5a03168343749910ea7c09021894, type: 3}
+  m_Name: GameSettings
+  m_EditorClassIdentifier: 
+  CommonPrefabsModel:
+    PlatformPrefab: {fileID: 7712925656396264872, guid: 8e3ffaa07c5f65544a42ed8173f57166,
+      type: 3}
+  CommonSettingsModel:
+    FirstPlatformPosition: {x: 0, y: 0, z: 0}
+    FirstPlatformScale: {x: 1, y: 0.2, z: 1}
