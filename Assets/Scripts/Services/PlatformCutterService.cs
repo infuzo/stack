@@ -1,4 +1,4 @@
-﻿using Stack.Models;
+﻿using Stack.EntitiesBehaviour;
 using UnityEngine;
 
 namespace Stack.Services

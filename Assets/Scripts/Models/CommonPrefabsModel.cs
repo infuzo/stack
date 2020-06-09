@@ -1,5 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using Stack.EntitiesBehaviour;
+using System;
 
 namespace Stack.Models
 {

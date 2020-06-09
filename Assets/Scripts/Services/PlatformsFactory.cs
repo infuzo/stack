@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 using Stack.Models;
+using Stack.EntitiesBehaviour;
 
 namespace Stack.Services
 {
