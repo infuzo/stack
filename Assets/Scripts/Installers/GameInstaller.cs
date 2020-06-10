@@ -32,6 +32,10 @@ namespace Stack.Installers
                 .To<PlatformsFactory>()
                 .AsSingle();
             Container
+                .Bind<ICutPartsFactory>()
+                .To<CutPartsFactory>()
+                .AsSingle();
+            Container
                 .Bind<IPlatfromPlacerService>()
                 .To<PlatformPlacerService>()
                 .AsSingle()

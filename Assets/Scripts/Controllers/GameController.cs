@@ -11,6 +11,7 @@ namespace Stack.Controllers
     public class GameController : IInitializable
     {
         protected readonly IPlatformsFactory platformsFactory;
+        protected readonly ICutPartsFactory cutPartsFactory;
         protected readonly IPlatfromPlacerService platfromPlacerService;
         protected readonly IPlatformCutterService platformCutterService;
         protected readonly CommonSettingsModel commonSettingsModel;
@@ -19,11 +20,13 @@ namespace Stack.Controllers
 
         public GameController(
             IPlatformsFactory platformsFactory,
+            ICutPartsFactory cutPartsFactory,
             IPlatfromPlacerService platfromPlacerService,
             CommonSettingsModel commonSettingsModel,
             IPlatformCutterService platformCutterService)
         {
             this.platformsFactory = platformsFactory;
+            this.cutPartsFactory = cutPartsFactory;
             this.commonSettingsModel = commonSettingsModel;
             this.platfromPlacerService = platfromPlacerService;
             this.platformCutterService = platformCutterService;
@@ -71,6 +74,9 @@ namespace Stack.Controllers
                     currentPlatform = platformsFactory.CreatePlatform(
                         result.NewPlatformPosition, 
                         result.NewPlatformScale);
+                    cutPartsFactory.CreateCutPart(
+                        result.RemainsPartPosition,
+                        result.RemainsPartScale);
                 }
                 else
                 {
@@ -78,8 +84,8 @@ namespace Stack.Controllers
                         previousPlatform.transform.position.x,
                         currentPlatform.transform.position.y,
                         previousPlatform.transform.position.z);
-                    CreateNewPlatformByCurrent();
                 }
+                CreateNewPlatformByCurrent();
             }
         }
     }

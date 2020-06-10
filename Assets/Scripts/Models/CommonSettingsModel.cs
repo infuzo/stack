@@ -10,6 +10,7 @@ namespace Stack.Models
         public Vector3 FirstPlatformScale;
         public float PlatformStartSpeed;
         public float MaxOffsetToSetAsNotOverlapped;
+        public float TimeInSecondsToDestroyCutPart;
     }
 }
 

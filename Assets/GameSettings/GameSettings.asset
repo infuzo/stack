@@ -15,8 +15,11 @@ MonoBehaviour:
   CommonPrefabsModel:
     PlatformPrefab: {fileID: 7712925656396264872, guid: 8e3ffaa07c5f65544a42ed8173f57166,
       type: 3}
+    CutPartPrefab: {fileID: 2325980617596178460, guid: 23015ea4b39162747a31d18bc4c3ecba,
+      type: 3}
   CommonSettingsModel:
     FirstPlatformPosition: {x: 0, y: 0, z: 0}
     FirstPlatformScale: {x: 1, y: 0.2, z: 1}
     PlatformStartSpeed: 2
     MaxOffsetToSetAsNotOverlapped: 0.03
+    TimeInSecondsToDestroyCutPart: 5
