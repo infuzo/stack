@@ -7,10 +7,16 @@ namespace Stack.Services
     public class PlatformPlacerService : IPlatfromPlacerService
     {
         protected readonly StartPointsModel startPointsModel;
+        protected readonly Vector3 defaultLeftTopPosition, defaultLeftBottomPosition, defaultRightTopPosition, defaultRightBottomPosition;
 
         public PlatformPlacerService(StartPointsModel startPointsModel)
         {
             this.startPointsModel = startPointsModel;
+
+            defaultLeftTopPosition = startPointsModel.LeftTopPoint.position;
+            defaultLeftBottomPosition = startPointsModel.LeftBottomPoint.position;
+            defaultRightTopPosition = startPointsModel.RightTopPoint.position;
+            defaultRightBottomPosition = startPointsModel.RightBottomPoint.position;
         }
 
         public virtual void GetRandomStartPoint(
@@ -27,6 +33,14 @@ namespace Stack.Services
                 point.position.z);
             direction = point.localScale;
             maxDistance = new Vector2(position.x, position.z).magnitude * 2f;
+        }
+
+        public virtual void OnGameOver()
+        {
+            startPointsModel.LeftTopPoint.position = defaultLeftTopPosition;
+            startPointsModel.LeftBottomPoint.position = defaultLeftBottomPosition;
+            startPointsModel.RightTopPoint.position = defaultRightTopPosition;
+            startPointsModel.RightBottomPoint.position = defaultRightBottomPosition;
         }
 
         public virtual void OnNewCurrentPlatformCreated(Platform platform)

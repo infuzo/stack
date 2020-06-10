@@ -155,6 +155,10 @@ namespace Stack.Installers
                  .BindSignal<GameOverSignal>()
                  .ToMethod<MainMenuController>(handler => handler.OnGameOver)
                  .FromResolve();
+            Container
+                 .BindSignal<GameOverSignal>()
+                 .ToMethod<IPlatfromPlacerService>(handler => (handler as PlatformPlacerService).OnGameOver)
+                 .FromResolve();
         }
     }
 }
