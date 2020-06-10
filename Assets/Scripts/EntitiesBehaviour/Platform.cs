@@ -18,12 +18,25 @@ namespace Stack.EntitiesBehaviour
         [SerializeField]
         protected BoxCollider boxCollider;
 
+        protected bool movementStopped;
+
         protected Vector3 direction;
         protected Vector3 startPosition;
         protected float speed;
         protected float maxDistance;
-        
-        public void StartMovement(Vector3 direction,
+
+        private void Update()
+        {
+            if(movementStopped) { return; }
+
+            transform.position += direction * speed * Time.deltaTime;
+            if(Vector3.Distance(transform.position, startPosition) >= maxDistance)
+            {
+                transform.position = startPosition;
+            }
+        }
+
+        public virtual void StartMovement(Vector3 direction,
             Vector3 startPosition,
             float speed,
             float maxDistance)
@@ -34,15 +47,12 @@ namespace Stack.EntitiesBehaviour
             this.maxDistance = maxDistance;
 
             boxCollider.enabled = false;
+            movementStopped = false;
         }
 
-        private void Update()
+        public virtual void StopMovement()
         {
-            transform.position += direction * speed * Time.deltaTime;
-            if(Vector3.Distance(transform.position, startPosition) >= maxDistance)
-            {
-                transform.position = startPosition;
-            }
+            movementStopped = true;
         }
     }
 }

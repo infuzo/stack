@@ -50,6 +50,11 @@ namespace Stack.Controllers
                 commonSettingsModel.PlatformStartSpeed,
                 maxDistance);
         }
+
+        public virtual void OnPlatformPlaced()
+        {
+            currentPlatform.StopMovement();
+        }
     }
 }
 

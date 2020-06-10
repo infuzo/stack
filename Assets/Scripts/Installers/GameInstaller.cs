@@ -3,6 +3,7 @@ using Stack.Models;
 using Stack.Services;
 using Stack.Controllers;
 using UnityEngine;
+using Stack.Signals;
 
 namespace Stack.Installers
 {
@@ -18,6 +19,14 @@ namespace Stack.Installers
 
         public override void InstallBindings()
         {
+            SignalBusInstaller.Install(Container);
+            InstallServices();
+            InstallControllers();
+            DeclareAndBindPlatformPlacedSignal();
+        }
+
+        private void InstallServices()
+        {
             Container
                 .Bind<IPlatformsFactory>()
                 .To<PlatformsFactory>()
@@ -27,9 +36,27 @@ namespace Stack.Installers
                 .To<PlatformPlacerService>()
                 .AsSingle()
                 .WithArguments<StartPointsModel>(startPointsModel);
+        }
+
+        private void InstallControllers()
+        {
             Container
                 .BindInterfacesAndSelfTo<GameController>()
                 .AsSingle();
+            Container
+                .Bind<InputController>()
+                .FromComponentInHierarchy()
+                .AsSingle();
+        }
+
+        private void DeclareAndBindPlatformPlacedSignal()
+        {
+            Container.DeclareSignal<PlatformPlacedSignal>();
+
+            Container
+                .BindSignal<PlatformPlacedSignal>()
+                .ToMethod<GameController>(h => h.OnPlatformPlaced)
+                .FromResolve();
         }
     }
 }
