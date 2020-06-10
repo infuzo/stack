@@ -70,7 +70,10 @@ namespace Stack.Controllers
             var result = platformCutterService.GetNewPlatformAndRemainsPart(previousPlatform, currentPlatform);
             if(result == null)
             {
-                //todo: end game
+                cutPartsFactory.CreateCutPart(
+                    currentPlatform.transform.position, currentPlatform.transform.localScale);
+                MonoBehaviour.Destroy(currentPlatform.gameObject);
+                //TODO: game over timer
             }
             else
             {
