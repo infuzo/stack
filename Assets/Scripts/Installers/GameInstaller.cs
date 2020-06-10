@@ -47,6 +47,14 @@ namespace Stack.Installers
                 .To<PlatformCutterService>()
                 .AsSingle()
                 .WithArguments(commonSettingsModel.MaxOffsetToSetAsNotOverlapped);
+            Container
+                .Bind<IScoresStorageService>()
+                .To<ScoresStorageService>()
+                .AsSingle();
+            Container
+                .Bind<IScoresService>()
+                .To<ScoresService>()
+                .AsSingle();
         }
 
         private void InstallControllers()
@@ -61,6 +69,9 @@ namespace Stack.Installers
             Container
                 .Bind<CameraMovementController>()
                 .FromComponentInHierarchy()
+                .AsSingle();
+            Container
+                .BindInterfacesAndSelfTo<ScoresController>()
                 .AsSingle();
         }
 
@@ -88,6 +99,10 @@ namespace Stack.Installers
                 .BindSignal<PlatformStoppedSignal>()
                 .ToMethod<IPlatfromPlacerService>(
                     (handler, signal) => (handler as PlatformPlacerService).OnNewCurrentPlatformCreated(signal.StoppedPlatform))
+                .FromResolve();
+            Container
+                .BindSignal<PlatformStoppedSignal>()
+                .ToMethod<ScoresController>(handler => handler.OnPlatformStopped)
                 .FromResolve();
         }
 
