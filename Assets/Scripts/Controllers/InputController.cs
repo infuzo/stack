@@ -1,22 +1,20 @@
 ﻿using Stack.Signals;
-using System.Collections;
+
+using UnityEngine.EventSystems;
 using UnityEngine;
+
 using Zenject;
 
 namespace Stack.Controllers
 {
-    public class InputController : MonoBehaviour
+    public class InputController : MonoBehaviour, IPointerDownHandler
     {
         [Inject]
         protected SignalBus signalBus;
 
-        //TODO: by ui
-        private void Update()
+        public void OnPointerDown(PointerEventData eventData)
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                signalBus.Fire<PlatformPlacedSignal>();
-            }
+            signalBus.Fire<PlatformPlacedSignal>();
         }
     }
 
