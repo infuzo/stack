@@ -61,6 +61,8 @@ namespace Stack.Controllers
                 position, 
                 commonSettingsModel.PlatformStartSpeed,
                 maxDistance);
+
+            signalBus.Fire(new PlatformCreatedSignal { CreatedPlatform = currentPlatform });
         }
 
         public virtual void OnPlatformPlaced()

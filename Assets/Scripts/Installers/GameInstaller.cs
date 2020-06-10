@@ -57,6 +57,10 @@ namespace Stack.Installers
                 .Bind<InputController>()
                 .FromComponentInHierarchy()
                 .AsSingle();
+            Container
+                .Bind<CameraMovementController>()
+                .FromComponentInHierarchy()
+                .AsSingle();
         }
 
         private void DeclareAndBindPlatformPlacedSignal()
@@ -70,8 +74,16 @@ namespace Stack.Installers
             Container.DeclareSignal<PlatformStoppedSignal>();
             Container
                 .BindSignal<PlatformStoppedSignal>()
-                .ToMethod<IPlatfromPlacerService>((handler, signal) => (handler as PlatformPlacerService).OnNewCurrentPlatformCreated(signal.StoppedPlatform))
+                .ToMethod<IPlatfromPlacerService>(
+                    (handler, signal) => (handler as PlatformPlacerService).OnNewCurrentPlatformCreated(signal.StoppedPlatform))
                 .FromResolve();
+
+            Container.DeclareSignal<PlatformCreatedSignal>();
+            Container
+                .BindSignal<PlatformCreatedSignal>()
+                .ToMethod<CameraMovementController>(
+                    (handler, signal) => handler.OnNewPlatformCreated(signal.CreatedPlatform))
+                .FromResolveAll();
         }
     }
 }

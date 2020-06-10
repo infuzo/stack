@@ -11,6 +11,7 @@ namespace Stack.Models
         public float PlatformStartSpeed;
         public float MaxOffsetToSetAsNotOverlapped;
         public float TimeInSecondsToDestroyCutPart;
+        public float CameraMovementSpeed;
     }
 }
 
