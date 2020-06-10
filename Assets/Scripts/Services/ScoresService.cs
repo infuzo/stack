@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Stack.Services
+﻿namespace Stack.Services
 {
     public class ScoresService : IScoresService
     {
