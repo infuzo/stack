@@ -28,6 +28,11 @@ namespace Stack.Controllers
             scoresService.IncreaseCurrentScore(1);
             uiService.UpdateScores(scoresService.GetCurrentScore());
         }
+
+        public void OnGameOver()
+        {
+            scoresService.SaveCurrentScoreIfHigher();
+        }
     }
 }
 

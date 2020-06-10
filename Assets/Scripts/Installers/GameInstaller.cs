@@ -137,6 +137,10 @@ namespace Stack.Installers
                  .BindSignal<GameOverSignal>()
                  .ToMethod<MainMenuController>(handler => handler.OnGameOver)
                  .FromResolve();
+            Container
+                 .BindSignal<GameOverSignal>()
+                 .ToMethod<ScoresController>(handler => handler.OnGameOver)
+                 .FromResolve();
         }
     }
 }
