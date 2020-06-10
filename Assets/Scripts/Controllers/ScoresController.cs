@@ -32,6 +32,7 @@ namespace Stack.Controllers
         public void OnGameOver()
         {
             scoresService.SaveCurrentScoreIfHigher();
+            scoresService.ResetCurrentScore();
         }
     }
 }

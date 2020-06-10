@@ -7,9 +7,11 @@ using UnityEngine;
 
 using Zenject;
 
+using System.Collections.Generic;
+
 namespace Stack.Controllers
 {
-    public class GameController : IInitializable
+    public class GameController
     {
         protected readonly IPlatformsFactory platformsFactory;
         protected readonly ICutPartsFactory cutPartsFactory;
@@ -20,6 +22,7 @@ namespace Stack.Controllers
         protected readonly SignalBus signalBus;
 
         protected Platform previousPlatform, currentPlatform;
+        protected List<GameObject> platforms = new List<GameObject>();
 
         public GameController(
             IPlatformsFactory platformsFactory,
@@ -37,16 +40,30 @@ namespace Stack.Controllers
             this.signalBus = signalBus;
         }
 
-        public void Initialize()
+        public virtual void OnGameStarted()
         {
+            ClearPreviousPlatforms();
             CreateFirstPlatform();
             CreateNewPlatformByCurrent();
+        }
+
+        protected virtual void ClearPreviousPlatforms()
+        {
+            foreach(var platform in platforms)
+            {
+                if(platform != null)
+                {
+                    MonoBehaviour.Destroy(platform);
+                }
+            }
+            platforms.Clear();
         }
 
         protected virtual void CreateFirstPlatform()
         {
             currentPlatform = platformsFactory
                 .CreatePlatform(commonSettingsModel.FirstPlatformPosition, commonSettingsModel.FirstPlatformScale);
+            platforms.Add(currentPlatform.gameObject);
         }
 
         protected virtual void CreateNewPlatformByCurrent()
@@ -56,6 +73,7 @@ namespace Stack.Controllers
             platfromPlacerService.GetRandomStartPoint(currentPlatform, out position, out direction, out maxDistance);
             previousPlatform = currentPlatform;
             currentPlatform = platformsFactory.CreatePlatform(position, currentPlatform.transform.localScale);
+            platforms.Add(currentPlatform.gameObject);
             currentPlatform.StartMovement(
                 direction, 
                 position, 
@@ -90,15 +108,16 @@ namespace Stack.Controllers
             }
         }
 
-        private void OnPlatformPlacedOutOfPreviousPlatform()
+        protected virtual void OnPlatformPlacedOutOfPreviousPlatform()
         {
             cutPartsFactory.CreateCutPart(
                     currentPlatform.transform.position, currentPlatform.transform.localScale);
+            platforms.Remove(currentPlatform.gameObject);
             MonoBehaviour.Destroy(currentPlatform.gameObject);
             signalBus.Fire<GameOverSignal>();
         }
 
-        private void OnPlatformPlacedExactAbovePreviousPlatform()
+        protected virtual void OnPlatformPlacedExactAbovePreviousPlatform()
         {
             currentPlatform.transform.position = new Vector3(
                 previousPlatform.transform.position.x,
@@ -106,8 +125,9 @@ namespace Stack.Controllers
                 previousPlatform.transform.position.z);
         }
 
-        private void OnPlatformPlacedWithOverlapping(PlatformCutterResultModel result)
+        protected virtual void OnPlatformPlacedWithOverlapping(PlatformCutterResultModel result)
         {
+            platforms.Remove(currentPlatform.gameObject);
             MonoBehaviour.Destroy(currentPlatform.gameObject);
             currentPlatform = platformsFactory.CreatePlatform(
                 result.NewPlatformPosition,
@@ -115,6 +135,7 @@ namespace Stack.Controllers
             cutPartsFactory.CreateCutPart(
                 result.RemainsPartPosition,
                 result.RemainsPartScale);
+            platforms.Add(currentPlatform.gameObject);
         }
     }
 }

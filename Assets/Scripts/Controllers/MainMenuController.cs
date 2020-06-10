@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 using Zenject;
 
 using Stack.Models;
+using Stack.Signals;
+using Stack.Services;
 
 namespace Stack.Controllers
 {
@@ -12,17 +15,54 @@ namespace Stack.Controllers
     {
         [Inject]
         private CommonSettingsModel commonSettingsModel;
+        [Inject]
+        private SignalBus signalBus;
+        [Inject]
+        private IScoresService scoresService;
 
         [SerializeField]
         private CanvasGroup canvasGroup;
         [SerializeField]
         private GameObject mainMenuGameObject;
+        [SerializeField]
+        private GameObject bestScoreParent;
+        [SerializeField]
+        private Text textBestScore;
 
         private Coroutine coroutineShowingAnimation;
+        private bool tapStartGameAvailable;
+
+        private void Start()
+        {
+            UpdateBestScore();
+            mainMenuGameObject.SetActive(true);
+            tapStartGameAvailable = true;
+            canvasGroup.alpha = 1f;
+        }
+
+        public void OnTap()
+        {
+            if(!tapStartGameAvailable) { return; }
+
+            signalBus.Fire<GameStartedSignal>();
+            tapStartGameAvailable = false;
+            mainMenuGameObject.SetActive(false);
+        }
 
         public void OnGameOver()
         {
             StartCoroutineShowingAnimation();
+            UpdateBestScore();
+        }
+
+        private void UpdateBestScore()
+        {
+            var bestScore = scoresService.GetHighestScore();
+            bestScoreParent.SetActive(bestScore != null);
+            if(bestScore != null)
+            {
+                textBestScore.text = bestScore.ToString();
+            }
         }
 
         private void StartCoroutineShowingAnimation()
@@ -48,6 +88,9 @@ namespace Stack.Controllers
                 canvasGroup.alpha = Mathf.Clamp01(counter);
                 yield return new WaitForEndOfFrame();
             }
+
+            canvasGroup.alpha = 1f;
+            tapStartGameAvailable = true;
 
             coroutineShowingAnimation = null;
         }

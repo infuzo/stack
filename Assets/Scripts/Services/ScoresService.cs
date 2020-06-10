@@ -29,7 +29,7 @@
         public virtual void SaveCurrentScoreIfHigher()
         {
             var highestScore = scoresStorageService.GetHighestScore();
-            if (highestScore != null && currentScore > highestScore)
+            if (highestScore == null || currentScore > highestScore)
             {
                 scoresStorageService.SetHighestScore(currentScore);
             }

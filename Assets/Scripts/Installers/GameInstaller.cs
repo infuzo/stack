@@ -86,10 +86,24 @@ namespace Stack.Installers
 
         private void InstallSignals() //todo: separate signal installer
         {
+            GameStartedSignal();
             InstallPlatformPlacedSignal();
             InstallPlatformStoppedSignal();
             InstallPlatformCreatedSignal();
             InstallGameOverSignal();
+        }
+
+        private void GameStartedSignal()
+        {
+            Container.DeclareSignal<GameStartedSignal>();
+            Container
+                .BindSignal<GameStartedSignal>()
+                .ToMethod<GameController>(h => h.OnGameStarted)
+                .FromResolve();
+            Container
+                .BindSignal<GameStartedSignal>()
+                .ToMethod<IUIService>((h, s) => h.UpdateScores(0))
+                .FromResolve();
         }
 
         private void InstallPlatformPlacedSignal()
@@ -135,11 +149,11 @@ namespace Stack.Installers
                 .FromResolve(); 
             Container
                  .BindSignal<GameOverSignal>()
-                 .ToMethod<MainMenuController>(handler => handler.OnGameOver)
+                 .ToMethod<ScoresController>(handler => handler.OnGameOver)
                  .FromResolve();
             Container
                  .BindSignal<GameOverSignal>()
-                 .ToMethod<ScoresController>(handler => handler.OnGameOver)
+                 .ToMethod<MainMenuController>(handler => handler.OnGameOver)
                  .FromResolve();
         }
     }
