@@ -57,10 +57,30 @@ namespace Stack.Controllers
 
         public virtual void OnPlatformPlaced()
         {
-            //currentPlatform.StopMovement();
-
             var result = platformCutterService.GetNewPlatformAndRemainsPart(previousPlatform, currentPlatform);
-            Debug.Log(result == null);
+            if(result == null)
+            {
+                //todo: end game
+            }
+            else
+            {
+                currentPlatform.StopMovement();
+                if (result.WasRemainsPart)
+                {
+                    MonoBehaviour.Destroy(currentPlatform.gameObject);
+                    currentPlatform = platformsFactory.CreatePlatform(
+                        result.NewPlatformPosition, 
+                        result.NewPlatformScale);
+                }
+                else
+                {
+                    currentPlatform.transform.position = new Vector3(
+                        previousPlatform.transform.position.x,
+                        currentPlatform.transform.position.y,
+                        previousPlatform.transform.position.z);
+                    CreateNewPlatformByCurrent();
+                }
+            }
         }
     }
 }
