@@ -25,3 +25,4 @@ MonoBehaviour:
     TimeInSecondsToDestroyCutPart: 5
     NewPlatformCameraMovementSpeed: 10
     GameOverCameraMovementSpeed: 0.75
+    MainMenuDelayAfterGameOver: 2

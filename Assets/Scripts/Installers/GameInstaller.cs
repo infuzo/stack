@@ -78,6 +78,10 @@ namespace Stack.Installers
             Container
                 .BindInterfacesAndSelfTo<ScoresController>()
                 .AsSingle();
+            Container
+                .Bind<MainMenuController>()
+                .FromComponentInHierarchy()
+                .AsSingle();
         }
 
         private void InstallSignals() //todo: separate signal installer
@@ -128,7 +132,11 @@ namespace Stack.Installers
             Container
                 .BindSignal<GameOverSignal>()
                 .ToMethod<CameraMovementController>(handler => handler.OnGameOver)
-                .FromResolve();
+                .FromResolve(); 
+            Container
+                 .BindSignal<GameOverSignal>()
+                 .ToMethod<MainMenuController>(handler => handler.OnGameOver)
+                 .FromResolve();
         }
     }
 }

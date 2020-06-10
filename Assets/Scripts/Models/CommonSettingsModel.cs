@@ -13,6 +13,7 @@ namespace Stack.Models
         public float TimeInSecondsToDestroyCutPart;
         public float NewPlatformCameraMovementSpeed;
         public float GameOverCameraMovementSpeed;
+        public float MainMenuDelayAfterGameOver;
     }
 }
 
