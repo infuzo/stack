@@ -70,35 +70,51 @@ namespace Stack.Controllers
             var result = platformCutterService.GetNewPlatformAndRemainsPart(previousPlatform, currentPlatform);
             if(result == null)
             {
-                cutPartsFactory.CreateCutPart(
-                    currentPlatform.transform.position, currentPlatform.transform.localScale);
-                MonoBehaviour.Destroy(currentPlatform.gameObject);
-                //TODO: game over timer
+                OnPlatformPlacedOutOfPreviousPlatform();
             }
             else
             {
                 currentPlatform.StopMovement();
+
                 if (result.WasRemainsPart)
                 {
-                    MonoBehaviour.Destroy(currentPlatform.gameObject);
-                    currentPlatform = platformsFactory.CreatePlatform(
-                        result.NewPlatformPosition, 
-                        result.NewPlatformScale);
-                    cutPartsFactory.CreateCutPart(
-                        result.RemainsPartPosition,
-                        result.RemainsPartScale);
+                    OnPlatformPlacedWithOverlapping(result);
                 }
                 else
                 {
-                    currentPlatform.transform.position = new Vector3(
-                        previousPlatform.transform.position.x,
-                        currentPlatform.transform.position.y,
-                        previousPlatform.transform.position.z);
+                    OnPlatformPlacedExactAbovePreviousPlatform();
                 }
 
                 signalBus.Fire(new PlatformStoppedSignal { StoppedPlatform = currentPlatform });
                 CreateNewPlatformByCurrent();
             }
+        }
+
+        private void OnPlatformPlacedOutOfPreviousPlatform()
+        {
+            cutPartsFactory.CreateCutPart(
+                    currentPlatform.transform.position, currentPlatform.transform.localScale);
+            MonoBehaviour.Destroy(currentPlatform.gameObject);
+            signalBus.Fire<GameOverSignal>();
+        }
+
+        private void OnPlatformPlacedExactAbovePreviousPlatform()
+        {
+            currentPlatform.transform.position = new Vector3(
+                previousPlatform.transform.position.x,
+                currentPlatform.transform.position.y,
+                previousPlatform.transform.position.z);
+        }
+
+        private void OnPlatformPlacedWithOverlapping(PlatformCutterResultModel result)
+        {
+            MonoBehaviour.Destroy(currentPlatform.gameObject);
+            currentPlatform = platformsFactory.CreatePlatform(
+                result.NewPlatformPosition,
+                result.NewPlatformScale);
+            cutPartsFactory.CreateCutPart(
+                result.RemainsPartPosition,
+                result.RemainsPartScale);
         }
     }
 }

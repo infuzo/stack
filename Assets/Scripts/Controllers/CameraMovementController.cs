@@ -26,15 +26,26 @@ namespace Stack.Controllers
 
         public void OnNewPlatformCreated(Platform platform)
         {
-            if(coroutineCameraChangePosition != null)
+            StartChangePositionCoroutine(
+                startCameraY + platform.transform.position.y, commonSettingsModel.NewPlatformCameraMovementSpeed);
+        }
+
+        public void OnGameOver()
+        {
+            StartChangePositionCoroutine(startCameraY, commonSettingsModel.GameOverCameraMovementSpeed);
+        }
+
+        private void StartChangePositionCoroutine(float newYPosition, float speed)
+        {
+            if (coroutineCameraChangePosition != null)
             {
                 StopCoroutine(coroutineCameraChangePosition);
             }
             coroutineCameraChangePosition = StartCoroutine(
-                CoroutineCameraChangePosition(startCameraY + platform.transform.position.y));
+                CoroutineCameraChangePosition(newYPosition, speed));
         }
 
-        IEnumerator CoroutineCameraChangePosition(float newYPosition)
+        private IEnumerator CoroutineCameraChangePosition(float newYPosition, float speed)
         {
             var cameraStartPosition = camera.transform.position;
             var cameraEndPosition = new Vector3(
@@ -45,7 +56,7 @@ namespace Stack.Controllers
             float factor = 0f;
             while(factor < 1f)
             {
-                factor += Time.deltaTime * commonSettingsModel.CameraMovementSpeed;
+                factor += Time.deltaTime * speed;
                 camera.transform.position = Vector3.Lerp(cameraStartPosition, cameraEndPosition, factor);
                 yield return new WaitForEndOfFrame();
             }

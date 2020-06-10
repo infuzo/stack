@@ -21,9 +21,10 @@ namespace Stack.Installers
         public override void InstallBindings()
         {
             SignalBusInstaller.Install(Container);
+            
             InstallServices();
             InstallControllers();
-            DeclareAndBindPlatformPlacedSignal();
+            InstallSignals();
         }
 
         private void InstallServices()
@@ -63,27 +64,51 @@ namespace Stack.Installers
                 .AsSingle();
         }
 
-        private void DeclareAndBindPlatformPlacedSignal()
+        private void InstallSignals() //todo: separate signal installer
+        {
+            InstallPlatformPlacedSignal();
+            InstallPlatformStoppedSignal();
+            InstallPlatformCreatedSignal();
+            InstallGameOverSignal();
+        }
+
+        private void InstallPlatformPlacedSignal()
         {
             Container.DeclareSignal<PlatformPlacedSignal>();
             Container
                 .BindSignal<PlatformPlacedSignal>()
                 .ToMethod<GameController>(h => h.OnPlatformPlaced)
                 .FromResolve();
+        }
 
+        private void InstallPlatformStoppedSignal()
+        {
             Container.DeclareSignal<PlatformStoppedSignal>();
             Container
                 .BindSignal<PlatformStoppedSignal>()
                 .ToMethod<IPlatfromPlacerService>(
                     (handler, signal) => (handler as PlatformPlacerService).OnNewCurrentPlatformCreated(signal.StoppedPlatform))
                 .FromResolve();
+        }
 
+        private void InstallPlatformCreatedSignal()
+        {
             Container.DeclareSignal<PlatformCreatedSignal>();
             Container
                 .BindSignal<PlatformCreatedSignal>()
                 .ToMethod<CameraMovementController>(
                     (handler, signal) => handler.OnNewPlatformCreated(signal.CreatedPlatform))
-                .FromResolveAll();
+                .FromResolve();
+        }
+
+        private void InstallGameOverSignal()
+        {
+            Container.DeclareSignal<GameOverSignal>();
+
+            Container
+                .BindSignal<GameOverSignal>()
+                .ToMethod<CameraMovementController>(handler => handler.OnGameOver)
+                .FromResolve();
         }
     }
 }

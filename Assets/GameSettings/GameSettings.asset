@@ -23,4 +23,5 @@ MonoBehaviour:
     PlatformStartSpeed: 3
     MaxOffsetToSetAsNotOverlapped: 0.04
     TimeInSecondsToDestroyCutPart: 5
-    CameraMovementSpeed: 10
+    NewPlatformCameraMovementSpeed: 10
+    GameOverCameraMovementSpeed: 0.9
