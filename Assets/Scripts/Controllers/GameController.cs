@@ -1,4 +1,5 @@
 ﻿using Stack.Services;
+using Stack.Signals;
 using Stack.Models;
 using Stack.EntitiesBehaviour;
 
@@ -16,6 +17,8 @@ namespace Stack.Controllers
         protected readonly IPlatformCutterService platformCutterService;
         protected readonly CommonSettingsModel commonSettingsModel;
 
+        protected readonly SignalBus signalBus;
+
         protected Platform previousPlatform, currentPlatform;
 
         public GameController(
@@ -23,22 +26,24 @@ namespace Stack.Controllers
             ICutPartsFactory cutPartsFactory,
             IPlatfromPlacerService platfromPlacerService,
             CommonSettingsModel commonSettingsModel,
-            IPlatformCutterService platformCutterService)
+            IPlatformCutterService platformCutterService,
+            SignalBus signalBus)
         {
             this.platformsFactory = platformsFactory;
             this.cutPartsFactory = cutPartsFactory;
             this.commonSettingsModel = commonSettingsModel;
             this.platfromPlacerService = platfromPlacerService;
             this.platformCutterService = platformCutterService;
+            this.signalBus = signalBus;
         }
 
         public void Initialize()
         {
-            CreateFirstsPlatform();
+            CreateFirstPlatform();
             CreateNewPlatformByCurrent();
         }
 
-        protected virtual void CreateFirstsPlatform()
+        protected virtual void CreateFirstPlatform()
         {
             currentPlatform = platformsFactory
                 .CreatePlatform(commonSettingsModel.FirstPlatformPosition, commonSettingsModel.FirstPlatformScale);
@@ -85,6 +90,8 @@ namespace Stack.Controllers
                         currentPlatform.transform.position.y,
                         previousPlatform.transform.position.z);
                 }
+
+                signalBus.Fire(new PlatformStoppedSignal { StoppedPlatform = currentPlatform });
                 CreateNewPlatformByCurrent();
             }
         }

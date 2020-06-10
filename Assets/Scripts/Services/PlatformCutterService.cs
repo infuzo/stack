@@ -29,25 +29,25 @@ namespace Stack.Services
             Platform targetPlatform)
         {
             var topDifference = targetPlatform.LeftTopPoint.position.z - basePlatform.LeftTopPoint.position.z;
-            if (topDifference > 0f && topDifference > maxOffsetToSetAsNotOverlapped)
+            if (topDifference > 0f && Mathf.Abs(topDifference) > maxOffsetToSetAsNotOverlapped)
             {
                 return CreateNewTopPlatform(basePlatform, targetPlatform, topDifference);
             }
 
             var bottomDifference = basePlatform.LeftBottomPoint.position.z - targetPlatform.LeftBottomPoint.position.z;
-            if (bottomDifference > 0f && bottomDifference > maxOffsetToSetAsNotOverlapped)
+            if (bottomDifference > 0f && Mathf.Abs(bottomDifference) > maxOffsetToSetAsNotOverlapped)
             {
                 return CreateNewBottomPlatform(basePlatform, targetPlatform, bottomDifference);
             }
 
             var leftDifference = basePlatform.LeftBottomPoint.position.x - targetPlatform.LeftBottomPoint.position.x;
-            if (leftDifference > 0f && leftDifference > maxOffsetToSetAsNotOverlapped)
+            if (leftDifference > 0f && Mathf.Abs(leftDifference) > maxOffsetToSetAsNotOverlapped)
             {
                 return CreateNewLeftPlatform(basePlatform, targetPlatform, leftDifference);
             }
 
             var rightDifference = targetPlatform.RightBottomPoint.position.x - basePlatform.RightBottomPoint.position.x;
-            if(rightDifference > 0f && rightDifference > maxOffsetToSetAsNotOverlapped)
+            if(rightDifference > 0f && Mathf.Abs(rightDifference) > maxOffsetToSetAsNotOverlapped)
             {
                 return CreateNewRightPlatform(basePlatform, targetPlatform, rightDifference);
             }

@@ -4,6 +4,7 @@ using Stack.Services;
 using Stack.Controllers;
 using UnityEngine;
 using Stack.Signals;
+using Stack.EntitiesBehaviour;
 
 namespace Stack.Installers
 {
@@ -61,10 +62,15 @@ namespace Stack.Installers
         private void DeclareAndBindPlatformPlacedSignal()
         {
             Container.DeclareSignal<PlatformPlacedSignal>();
-
             Container
                 .BindSignal<PlatformPlacedSignal>()
                 .ToMethod<GameController>(h => h.OnPlatformPlaced)
+                .FromResolve();
+
+            Container.DeclareSignal<PlatformStoppedSignal>();
+            Container
+                .BindSignal<PlatformStoppedSignal>()
+                .ToMethod<IPlatfromPlacerService>((handler, signal) => (handler as PlatformPlacerService).OnNewCurrentPlatformCreated(signal.StoppedPlatform))
                 .FromResolve();
         }
     }
