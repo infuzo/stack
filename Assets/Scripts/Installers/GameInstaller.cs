@@ -36,6 +36,11 @@ namespace Stack.Installers
                 .To<PlatformPlacerService>()
                 .AsSingle()
                 .WithArguments<StartPointsModel>(startPointsModel);
+            Container
+                .Bind<IPlatformCutterService>()
+                .To<PlatformCutterService>()
+                .AsSingle()
+                .WithArguments(commonSettingsModel.MaxOffsetToSetAsNotOverlapped);
         }
 
         private void InstallControllers()

@@ -12,27 +12,30 @@ namespace Stack.Controllers
     {
         protected readonly IPlatformsFactory platformsFactory;
         protected readonly IPlatfromPlacerService platfromPlacerService;
+        protected readonly IPlatformCutterService platformCutterService;
         protected readonly CommonSettingsModel commonSettingsModel;
 
-        protected Platform currentPlatform;
+        protected Platform previousPlatform, currentPlatform;
 
         public GameController(
             IPlatformsFactory platformsFactory,
             IPlatfromPlacerService platfromPlacerService,
-            CommonSettingsModel commonSettingsModel)
+            CommonSettingsModel commonSettingsModel,
+            IPlatformCutterService platformCutterService)
         {
             this.platformsFactory = platformsFactory;
             this.commonSettingsModel = commonSettingsModel;
             this.platfromPlacerService = platfromPlacerService;
+            this.platformCutterService = platformCutterService;
         }
 
         public void Initialize()
         {
-            CreateFirstsPlatforms();
+            CreateFirstsPlatform();
             CreateNewPlatformByCurrent();
         }
 
-        protected virtual void CreateFirstsPlatforms()
+        protected virtual void CreateFirstsPlatform()
         {
             currentPlatform = platformsFactory
                 .CreatePlatform(commonSettingsModel.FirstPlatformPosition, commonSettingsModel.FirstPlatformScale);
@@ -43,6 +46,7 @@ namespace Stack.Controllers
             Vector3 position, direction;
             float maxDistance;
             platfromPlacerService.GetRandomStartPoint(currentPlatform, out position, out direction, out maxDistance);
+            previousPlatform = currentPlatform;
             currentPlatform = platformsFactory.CreatePlatform(position, currentPlatform.transform.localScale);
             currentPlatform.StartMovement(
                 direction, 
@@ -53,7 +57,10 @@ namespace Stack.Controllers
 
         public virtual void OnPlatformPlaced()
         {
-            currentPlatform.StopMovement();
+            //currentPlatform.StopMovement();
+
+            var result = platformCutterService.GetNewPlatformAndRemainsPart(previousPlatform, currentPlatform);
+            Debug.Log(result == null);
         }
     }
 }
