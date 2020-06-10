@@ -55,6 +55,11 @@ namespace Stack.Installers
                 .Bind<IScoresService>()
                 .To<ScoresService>()
                 .AsSingle();
+            Container
+                .Bind<IUIService>()
+                .To<UIService>()
+                .FromComponentInHierarchy()
+                .AsSingle();
         }
 
         private void InstallControllers()
